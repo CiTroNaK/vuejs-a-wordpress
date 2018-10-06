@@ -21,18 +21,13 @@ autoscale: true
 
 - Úvod
 - Základy Vue.js
-- Možnosti použití s WordPress
+- Možnosti integrace s WordPress
 
 [.footer: Petr Hlavička: Vue.js a WordPress]
 
 ---
 
-## O přednášce
-
-- bude techničtější
-- stačí základy JavaScriptu
-- modrý text jsou odkazy
-- dotazy až na konec
+# Použili jste někdy moderní JavaScript framework s WordPressem?
 
 [.footer: Petr Hlavička: Vue.js a WordPress - Úvod]
 
@@ -275,8 +270,12 @@ vm.a // => 3
 ## Reaktivní Vue
 
 ```javascript
-vm.$data === data // => true
-vm.$el === document.getElementById('example') // => true
+var data = { a: 1 }
+
+var vm = new Vue({
+  el: '#example',
+  data: data
+})
 
 vm.$watch('a', function (newValue, oldValue) {
   // This callback will be called when `vm.a` changes
@@ -286,6 +285,12 @@ vm.$watch('a', function (newValue, oldValue) {
 [.footer: Petr Hlavička: Vue.js a WordPress - Základy Vue.js - Reaktivní Vue]
 
 –--
+
+## Vue vs jQuery
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Základy Vue.js - Reaktivní Vue]
+
+---
 
 ## Vue vs jQuery
 
@@ -368,56 +373,6 @@ vm.$watch('a', function (newValue, oldValue) {
 ```
 
 ![right autoplay mute loop](media/reactive.m4v)
-
-[.footer: Petr Hlavička: Vue.js a WordPress - Základy Vue.js - Reaktivní Vue]
-
-–--
-
-## Reaktivní Vue - ukázka
-
-```html
-<div id="header-cart">
-  Cart ({{ count }})
-</div>
-
-<script>
-  var cartData = { count: 1 }
-
-  var cartHeaderVm = new Vue({
-    el: '#header-cart',
-    data: cartData
-  });
-</script>
-```
-
-[.footer: Petr Hlavička: Vue.js a WordPress - Základy Vue.js - Reaktivní Vue]
-
-–--
-
-## Reaktivní Vue - ukázka
-
-```html
-<div id="products">
-  <ul>
-    <li v-for="(product, index) in products" :key="index">
-      {{ product.name }}
-      <button @click="cart.count++">+</button>
-    </li>
-  </ul>
-</div>
-
-<script>
-  var productsVm = new Vue({
-    el: '#products',
-    data: {
-      cart: cartData,
-      products: [{
-        name: 'Product'
-      }]
-    }
-  });
-</script>
-```
 
 [.footer: Petr Hlavička: Vue.js a WordPress - Základy Vue.js - Reaktivní Vue]
 
@@ -515,6 +470,12 @@ vm.$watch('a', function (newValue, oldValue) {
 
 - stávající HTML
 - čistý JavaScript => žádné další nástroje => žádná kompilace
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Základy Vue.js - Template syntaxe]
+
+–--
+
+# Computed vs Methods
 
 [.footer: Petr Hlavička: Vue.js a WordPress - Základy Vue.js - Template syntaxe]
 
@@ -629,6 +590,12 @@ vm.$watch('a', function (newValue, oldValue) {
 ```
 
 [.footer: Petr Hlavička: Vue.js a WordPress - Základy Vue.js - Methods]
+
+–--
+
+# Watchers
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Základy Vue.js - Template syntaxe]
 
 ---
 
@@ -1048,12 +1015,6 @@ vm.$watch('a', function (newValue, oldValue) {
 
 ---
 
-## Shrnutí k základům Vue.js
-
-[.footer: Petr Hlavička: Vue.js a WordPress - Základy Vue.js]
-
----
-
 ## Vue.js a WordPress
 
 [.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress]
@@ -1092,13 +1053,11 @@ function register_vue_scripts() {
     'vue',
     $vue_url,
     array('jquery'),
-    '2.5.16',
+    '2.5.17',
     true
   );
 
   wp_enqueue_script( 'vue' );
-}
-add_action('wp_enqueue_scripts', 'register_vue_scripts', 10);
 ```
 
 [.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - základní integrace]
@@ -1108,24 +1067,27 @@ add_action('wp_enqueue_scripts', 'register_vue_scripts', 10);
 ## Základní integrace
 
 ```php
-...
-wp_enqueue_script( 'vue' );
+  ...
+  wp_enqueue_script( 'vue' );
 
-wp_register_script(
-  'vue-app',
-  get_template_directory_uri() . '/assets/js/vue.app.js',
-  array('vue'),
-  '1.0.0',
-  true
-);
+  wp_register_script(
+    'vue-app',
+    get_template_directory_uri() . '/assets/js/vue.app.js',
+    array('vue'),
+    '1.0.0',
+    true
+  );
 
-$t = array(
-  'title' => __( 'Vue.js is awesome!', 'plugin-domain' )
-);
+  $t = array(
+    'title' => __( 'Vue.js is awesome!', 'plugin-domain' )
+  );
 
-wp_localize_script( 'vue-app', 'vueApp', $t );
+  wp_localize_script( 'vue-app', 'vueApp', $t );
 
-wp_enqueue_script( 'vue-app' );
+  wp_enqueue_script( 'vue-app' );
+
+  }
+add_action('wp_enqueue_scripts', 'register_vue_scripts', 10);
 ```
 
 [.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - základní integrace]
@@ -1284,7 +1246,7 @@ var vueTodos = new Vue({
 - komplexnější logika
 - více komponent a dalších knihoven
 - nástroje pro usnadnění vývoje
-- "novější" JavaScript
+- novější JavaScript
 
 [.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
 
@@ -1294,8 +1256,9 @@ var vueTodos = new Vue({
 
 ### dle způsobu použití s WordPress
 
-- WordPress šablona
-- vue-cli
+- Připravená WordPress šablona
+- [Vue CLI 3](https://cli.vuejs.org)
+- Vlastní řešení
 
 [.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
 
@@ -1305,6 +1268,7 @@ var vueTodos = new Vue({
 
 ### WordPress šablona
 
+- [VueTheme](https://github.com/rtCamp/VueTheme)
 - [vuejs-wordpress-theme-starter](https://github.com/EvanAgee/vuejs-wordpress-theme-starter)
 - [wp-vue-starter](https://github.com/michaelsoriano/wp-vue-starter)
 - [vuepress](https://github.com/funkhaus/vuepress)
@@ -1313,55 +1277,47 @@ var vueTodos = new Vue({
 
 ---
 
-## Pokročilá integrace
-
-### [vue-cli](https://github.com/vuejs/vue-cli/tree/master)
-
-- [webpack](https://webpack.js.org) nebo [browserify](http://browserify.org)
-- ES2015+ (ES6+) ([babel](https://babeljs.io))
-- kontrola syntaxe (linting)
-- kompilace & minifikace
-- jednosouborové šablony (single file template)
-- hot-reload pro vývoj
-
-[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
-
----
-
-## Pokročilá integrace
-
-### [vue-cli](https://github.com/vuejs/vue-cli/tree/master)
+## Pokročilá integrace přes [Vue CLI 3](https://github.com/vuejs/vue-cli/tree/master)
 
 ```bash
-npm install -g vue-cli
-vue init <template-name> <project-name>
+npm install -g @vue/cli
+vue create <project-name>
+# nebo
+vue ui
 ```
 
-- **webpack** - A full-featured Webpack + vue-loader setup with hot reload, linting, testing & css extraction.
-- **webpack-simple** - A simple Webpack + vue-loader setup for quick prototyping.
-- **browserify** - A full-featured Browserify + vueify setup with hot-reload, linting & unit testing.
-- **browserify-simple** - A simple Browserify + vueify setup for quick prototyping.
-- **pwa** - PWA template for vue-cli based on the webpack template
-- **simple** - The simplest possible Vue setup in a single HTML file
-
 [.build-lists: false]
-[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace přes Vue CLI 3]
 
 ---
 
-![fit](media/vue-cli.png)
+![fit](media/cli/1.png)
 
 ---
 
-![inline](media/vue-project-start.png)
-
-[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+![fit](media/cli/2.png)
 
 ---
 
-![fit](media/vue-project.png)
+![fit](media/cli/3.png)
 
-[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+---
+
+![fit](media/cli/4.png)
+
+---
+
+![fit](media/cli/5.png)
+
+---
+
+![fit](media/cli/6.png)
+
+---
+
+# Single file template
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Single file template .vue]
 
 ---
 
@@ -1479,12 +1435,11 @@ h1 {
 
 ## Pokročilá integrace
 
-### Ukázka výstupu z vue-cli webpack varianty
+### Ukázka výstupu z vue-cli (`yarn build`)
 
-- `app.68dc887562f1a3e42577.js`
-- `app.c490abe291e11550e2af9be122b.css`
-- `vendor.0fb1f9e8fc34a968a8b0.js`
-- `manifest.2ae2e69a05c33dfc65f8.js`
+- `js/chunk-vendors.6c9cb6ef.js`
+- `js/app.32eab465.js`
+- `css/app.25b0fcc6.css`
 
 [.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
 
@@ -1498,8 +1453,7 @@ $url_path = get_template_directory_uri();
 
 $vue_app = glob($dir_path . '/assets/vue/app.*.js');
 $vue_css = glob($dir_path . '/assets/vue/app.*.css');
-$vue_manifest = glob($dir_path . '/assets/vue/manifest.*.js');
-$vue_vendor = glob($dir_path . '/assets/vue/vendor.*.js');
+$vue_vendor = glob($dir_path . '/assets/vue/chunk.*.js');
 
 wp_register_style(
   'vue-app',
@@ -1510,17 +1464,9 @@ wp_register_style(
 wp_enqueue_style('vue-app');
 
 wp_register_script(
-  'vue-manifest',
-  str_replace($dir_path, $url_path, $vue_manifest[0]),
-  array('jquery'),
-  null,
-  true
-);
-
-wp_register_script(
   'vue-vendor',
   str_replace($dir_path, $url_path, $vue_vendor[0]),
-  array('jquery', 'vue-manifest'),
+  array('jquery'),
   null,
   true
 );
@@ -1528,13 +1474,193 @@ wp_register_script(
 wp_register_script(
   'vue-app',
   str_replace($dir_path, $url_path, $vue_app[0]),
-  array('jquery', 'vue-manifest', 'vue-vendor'),
+  array('jquery', 'vue-vendor'),
   null,
   true
 );
 
 wp_enqueue_script('vue-app');
 ```
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+```html
+<template>
+  <div>
+    <p>{{ msg }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      title: 'WP Pivo',
+      body: 'Máme rádi WordPress. Rádi v něm vytváříme webové stránky...'
+    }
+  }
+}
+</script>
+```
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+```javascript
+import Vue from 'vue'
+
+import WpWeekend from './components/wp-weekend.vue'
+Vue.component('wp-weekend', WpWeekend)
+
+new Vue({
+  el: '[data-behavior="vue"]'
+})
+```
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+```javascript, [.highlight: 3-4]
+import Vue from 'vue'
+
+import WpWeekend from './components/wp-weekend.vue'
+Vue.component('wp-weekend', WpWeekend)
+
+new Vue({
+  el: '[data-behavior="vue"]'
+})
+```
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+```javascript, [.highlight: 6-8]
+import Vue from 'vue'
+
+import WpWeekend from './components/wp-weekend.vue'
+Vue.component('wp-weekend', WpWeekend)
+
+new Vue({
+  el: '[data-behavior="vue"]'
+})
+```
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+```html
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <div data-behavior="vue">
+      <!-- předchozí HTML -->
+    </div>
+  </body>
+</html>
+```
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+```html, [.highlight: 5, 7]
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <div data-behavior="vue">
+      <!-- předchozí HTML -->
+    </div>
+  </body>
+</html>
+```
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+```html, [.highlight: 2]
+<div data-behavior="vue">
+  <wp-weekend></wp-weekend>
+</div>
+```
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+```html, [.highlight: 2,3]
+<div data-behavior="vue">
+  <wp-weekend></wp-weekend>
+  <wp-weekend></wp-weekend>
+</div>
+```
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+```html, [.highlight: 2]
+<div data-behavior="vue">
+  <wp-weekend title="<?php echo $data['msg']; ?>"></wp-weekend>
+</div>
+```
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+```html, [.highlight: 2]
+<div data-behavior="vue">
+  <wp-weekend ucastnici="<?php echo json_encode($ucastnici); ?>"></wp-weekend>
+</div>
+```
+
+[.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
+
+---
+
+## Pokročilá integrace - flexibilnější propojení
+
+# Nevýhody
+
+- Je potřeba využít vue-cli či webpack apod.
+- Vue řeší načtení celého HTML v rámci `[data-behavior="vue"]`
+- Je nutné ostatní javascriptové knihovny inicializovat až po Vue
+- Což může být u WP a jeho pluginů problém
 
 [.footer: Petr Hlavička: Vue.js a WordPress - Vue.js a WordPress - Pokročilá integrace]
 
@@ -1612,15 +1738,16 @@ wp_enqueue_script('vue-app');
 - [Vue School](https://vueschool.io) - video tutoriály
 - [The Majesty of Vue.js 2](https://leanpub.com/vuejs2) - kniha
 - [Vue JS 2 - The Complete Guide (incl. Vue Router & Vuex)](https://www.udemy.com/vuejs-2-the-complete-guide/) - Udemy kurz
+- [7 secret patterns Vue consultants don't want you to know](https://www.vuemastery.com/conferences/vueconf-2018/7-secret-patterns-vue-consultants-dont-want-you-to-know-chris-fritz/)
 
 [.build-lists: false]
 [.footer: Petr Hlavička: Vue.js a WordPress - Zajímavé odkazy]
 
 ---
 
-#### Prezentace bude dostupná na [github.com/CiTroNaK/vuejs-a-wordpress](https://github.com/CiTroNaK/vuejs-a-wordpress), případně sledujte [#WCBratislava](https://twitter.com/hashtag/WCBratislava) na Twitteru.
+#### Prezentace bude dostupná na [github.com/CiTroNaK/vuejs-a-wordpress](https://github.com/CiTroNaK/vuejs-a-wordpress/tree/wpweekend) větev `wpweekend`
 
-![inline](media/wcba.png)
+![inline](media/wp-weekend.svg)
 
 ## Děkuji za pozornost.
 
